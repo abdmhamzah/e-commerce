@@ -9,7 +9,7 @@
                 <form @submit.prevent="signup" style="width: 25%;">
                     <div class="form-row">
                         <div class="col mb-3">
-                            <input v-model="input_username" type="text" class="form-control" placeholder="Enter Your Name" required>
+                            <input v-model="input_name" type="text" class="form-control" placeholder="Enter Your Name" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -52,7 +52,7 @@ export default {
     name: 'PageSignup',
     data(){
         return {
-            input_username: null,
+            input_name: null,
             input_email: null,
             input_password: null,
             input_confirm_password: null
@@ -60,7 +60,13 @@ export default {
     },
     methods: {
         signup(){
-            this.$router.push({ path: 'signin' })
+            const newUser = {
+                name: this.input_name,
+                email: this.input_email,
+                password: this.input_password,
+                confirm_password: this.input_confirm_password
+            }
+            this.$store.dispatch('signup', newUser)
         },
         toSignin(){
             this.$router.push({ path: 'signin' })

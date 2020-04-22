@@ -48,7 +48,11 @@ export default {
     },
     methods: {
         signin(){
-            this.$router.push({ name: 'Home' })
+            const user = {
+                email: this.input_email,
+                password: this.input_password
+            }
+            this.$store.dispatch('signin', user)
         },
         toSignup(){
             this.$router.push({ path: 'signup' })

@@ -35,6 +35,7 @@ export default {
     name: 'Navbar',
     methods: {
         signout(){
+            localStorage.clear()
             this.$router.push({ name: 'Home' })
         }
     }
