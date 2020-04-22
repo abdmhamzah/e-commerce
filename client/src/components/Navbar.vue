@@ -5,7 +5,7 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                    <b-nav-item :to="{ name: 'Home' }" href="#">Shop</b-nav-item>
+                    <b-nav-item :to="{ name: 'Home' }" href="#">Catalog</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
@@ -17,12 +17,19 @@
 
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
-                        <template v-slot:button-content>
-                            <em>User</em>
+                        <template v-if="!isLogin" v-slot:button-content>
+                            <em>Shop</em>
                         </template>
-                        <b-dropdown-item :to="{ path: '/signin' }" href="#">Sign In</b-dropdown-item>
-                        <b-dropdown-item href="#">My Cart</b-dropdown-item>
-                        <b-dropdown-item @click.prevent="signout" href="#">Sign Out</b-dropdown-item>
+                        <template v-else v-slot:button-content>
+                            <em>{{ userName }}</em>
+                        </template>
+                        <div v-if="!isLogin">
+                            <b-dropdown-item :to="{ path: '/signin' }" href="#">Sign In</b-dropdown-item>
+                        </div>
+                        <div v-else>
+                            <b-dropdown-item href="#">My Cart</b-dropdown-item>
+                            <b-dropdown-item @click.prevent="signout" href="#">Sign Out</b-dropdown-item>
+                        </div>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </b-collapse>
@@ -33,10 +40,19 @@
 <script>
 export default {
     name: 'Navbar',
+    computed: {
+        isLogin(){
+            return this.$store.state.isLogin
+        },
+        userName(){
+            return this.$store.state.userName
+        }
+    },
     methods: {
         signout(){
             localStorage.clear()
-            this.$router.push({ name: 'Home' })
+            this.$store.state.isLogin = false
+            this.$router.push({ name: 'PageSignin' })
         }
     }
 }

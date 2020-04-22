@@ -48,6 +48,7 @@ class ControllerUser {
                             message: 'Sign In User Successfull',
                             payload: {
                                 token: token,
+                                name: user.name,
                                 email: user.email,
                                 role: user.role
                             }

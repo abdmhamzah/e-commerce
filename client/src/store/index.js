@@ -10,7 +10,8 @@ Vue.use(VueAxios, axios)
 
 export default new Vuex.Store({
     state: {
-        isLogin: false
+        userName: null,
+        isLogin: false,
     },
     mutations: {
     },
@@ -19,7 +20,6 @@ export default new Vuex.Store({
             if (newUser.password != newUser.confirm_password) {
                 console.log('Confirm Password must be the same with Password')
             } else {
-                console.log(newUser)
                 axios({
                     url: `${url}/users/signup`,
                     method: 'POST',
@@ -34,8 +34,8 @@ export default new Vuex.Store({
                 })
             }
         },
-        signin(contex, user){
-            console.log(user);
+        signin({state}, user){
+            // console.log(user);
             axios({
                 url: `${url}/users/signin`,
                 method: 'POST',
@@ -43,12 +43,15 @@ export default new Vuex.Store({
             })
             .then(userSignin => {
                 localStorage.setItem('token', userSignin.data.payload.token)
+                localStorage.setItem('name', userSignin.data.payload.name)
                 localStorage.setItem('email', userSignin.data.payload.email)
                 localStorage.setItem('role', userSignin.data.payload.role)
+                state.isLogin = true
+                state.userName = userSignin.data.payload.name
                 router.push({ name: 'Home' })
             })
             .catch(err => {
-                comsole.log(err)
+                console.log(err)
             })
         },
     },
