@@ -51,7 +51,8 @@ class ControllerProduct {
     static updateProduct(req, res, next){
         const { id } = req.params
         const editedProductData = req.body
-  
+        console.log('MASUK EDIT');
+        
         Product.findByPk(id)
             .then(product => {
                 if (!product) {

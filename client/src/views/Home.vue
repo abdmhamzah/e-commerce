@@ -11,7 +11,7 @@ import ProductListUser from '../components/ProductListUser'
 export default {
     name: 'Home',
     components: {
-        ProductListUser
-    }
+        ProductListUser,
+    },
 }
 </script>

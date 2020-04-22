@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import PageSignup from '../views/PageSignup'
 import PageSignin from '../views/PageSignin'
+import PageAdmin from '../views/PageAdmin'
+import AddProduct from '../components/AddProduct'
+import EditProduct from '../components/EditProduct'
 
 Vue.use(VueRouter)
 
@@ -22,12 +25,28 @@ Vue.use(VueRouter)
     name: 'PageSignup',
     component: PageSignup
   },
-  ,
   {
     path: '/signin',
     name: 'PageSignin',
     component: PageSignin
   },
+  {
+    path: '/pageAdmin',
+    name: 'PageAdmin',
+    component: PageAdmin,
+    children: [
+      {
+          path: '/addProduct',
+          name: 'AddProduct',
+          component: AddProduct
+      },
+      {
+          path: '/editProduct',
+          name: 'EditProduct',
+          component: EditProduct,
+      }
+    ]
+  }
 ]
 
 const router = new VueRouter({
