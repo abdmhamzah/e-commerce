@@ -58,20 +58,6 @@ class ControllerCart {
         .catch(next)
     }
 
-    // [
-    //     {
-    //         "id": 1,
-    //         "ProductId": 1,
-    //         "UserId": 2,
-    //         "qty": 2,
-    //     },
-    //     {
-    //         "id": 6,
-    //         "ProductId": 2,
-    //         "UserId": 2,
-    //         "qty": 2,
-    //     }
-    // ]
 
     static updateCartToBuy(req, res, next){
         const { qty } = req.body

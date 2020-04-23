@@ -184,6 +184,9 @@ export default new Vuex.Store({
             } else {
                 console.log('Login dulu');
             }
+        },
+        getCart({commit}){
+            
         }
     },
     modules: {
