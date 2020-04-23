@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from '../router'
-const url = 'http://localhost:3000'
+const url = 'https://aqueous-mesa-53283.herokuapp.com'
+// const url = 'http://localhost:3000'
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -186,7 +187,7 @@ export default new Vuex.Store({
             }
         },
         getCart({commit}){
-            
+
         }
     },
     modules: {
