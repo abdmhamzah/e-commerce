@@ -27,7 +27,7 @@
                             <b-dropdown-item :to="{ path: '/signin' }" href="#">Sign In</b-dropdown-item>
                         </div>
                         <div v-else>
-                            <b-dropdown-item v-if="role == 'user'" href="#">My Cart</b-dropdown-item>
+                            <b-dropdown-item v-if="role == 'user' && isLogin" @click.prevent="toCart" href="#">My Cart</b-dropdown-item>
                             <b-dropdown-item @click.prevent="signout" href="#">Sign Out</b-dropdown-item>
                         </div>
                     </b-nav-item-dropdown>
@@ -54,6 +54,9 @@ export default {
     methods: {
         signout(){
             this.$store.dispatch('signout')
+        },
+        toCart(){
+            this.$router.push({ name: 'PageCart' })
         }
     }
 }

@@ -14,7 +14,9 @@ export default new Vuex.Store({
         role: null,
         isLogin: false,
         list_product: [],
-        toEdit: {}
+        toEdit: {},
+        toDetail: {},
+        cart_list: []
     },
     mutations: {
         SET_NAME(state, name){
@@ -24,8 +26,6 @@ export default new Vuex.Store({
             state.isLogin = login
         },
         SET_ROLE(state, role){
-            console.log(role);
-            
             state.role = role
         },
         SET_LIST_PRODUCT(state, products){
@@ -36,6 +36,12 @@ export default new Vuex.Store({
         },
         TO_EDIT_PRODUCT(state, dataToEdit){
             state.toEdit = dataToEdit
+        },
+        TO_DETAIL_PRODUCT(state, dataToDetail){
+            state.toDetail = dataToDetail
+        },
+        ADD_TO_CART(state, product){
+            state.cart_list.push(product)
         }
     },
     actions: {
@@ -57,7 +63,7 @@ export default new Vuex.Store({
                 })
             }
         },
-        signin({state, commit}, user){
+        signin({commit}, user){
             // console.log(user);
             axios({
                 url: `${url}/users/signin`,
@@ -66,7 +72,6 @@ export default new Vuex.Store({
             })
             .then(userSignin => {
                 // console.log(userSignin.data.payload);
-                
                 localStorage.setItem('token', userSignin.data.payload.token)
                 localStorage.setItem('name', userSignin.data.payload.name)
                 localStorage.setItem('email', userSignin.data.payload.email)
@@ -170,6 +175,15 @@ export default new Vuex.Store({
                 })
                 commit('SET_LIST_PRODUCT', undeleted)
             })
+        },
+        addToCart({commit}, product){
+            let token = localStorage.getItem('token')
+            if (token) {
+                commit('ADD_TO_CART', product)
+                router.push({ name: 'PageCart' })
+            } else {
+                console.log('Login dulu');
+            }
         }
     },
     modules: {

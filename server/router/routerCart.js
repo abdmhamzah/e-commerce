@@ -1,5 +1,11 @@
 const router = require('express').Router()
+const ControllerCart = require('../controllers/ControllerCart')
+const authentication = require('../middlewares/authentication')
 
-router.get('/', (req, res) => res.send('Hello Cart!'))
+router.use(authentication)
+router.get('/', ControllerCart.getCart)
+router.post('/:id', ControllerCart.createCart)
+router.put('/:id', ControllerCart.updateCartToBuy)
+router.delete('/', ControllerCart.checkout)
 
 module.exports = router

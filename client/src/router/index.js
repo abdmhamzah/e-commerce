@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import PageSignup from '../views/PageSignup'
 import PageSignin from '../views/PageSignin'
 import PageAdmin from '../views/PageAdmin'
+import PageDetailProduct from '../views/PageDetailProduct'
+import PageCart from '../views/PageCart'
 import AddProduct from '../components/AddProduct'
 import EditProduct from '../components/EditProduct'
 
@@ -46,7 +48,17 @@ Vue.use(VueRouter)
           component: EditProduct,
       }
     ]
-  }
+  },
+  {
+    path: '/detailProduct',
+    name: 'PageDetailProduct',
+    component: PageDetailProduct
+  },
+  {
+    path: '/userCart',
+    name: 'PageCart',
+    component: PageCart
+  },
 ]
 
 const router = new VueRouter({

@@ -15,15 +15,18 @@ export default {
     },
     created(){
         this.checkSession()
-        console.log(this.$store.state.role)
-        console.log(this.$store.state.isLogin)
-        console.log(this.$store.state.userName)
     },
     methods: {
         checkSession(){
             const token = localStorage.getItem('token')
+            const name = localStorage.getItem('name')
             const role = localStorage.getItem('role')
+            // console.log(role);
+            // console.log(name);
             if (token) {
+                this.$store.commit('SET_LOGIN', true)
+                this.$store.commit('SET_NAME', name)
+                this.$store.commit('SET_ROLE', role)
                 if (role == 'user' || role == null) {
                     if (this.$route.name != 'Home') {
                         this.$router.push({ name: 'Home' })

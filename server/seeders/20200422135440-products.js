@@ -39,6 +39,15 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
+      {
+        name: 'NEW! Iphone SE',
+        image_url: 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-se-family-select-2020?wid=882&amp;hei=1058&amp;fmt=jpeg&amp;qlt=80&amp;op_usm=0.5,0.5&amp;.v=1586794486444',
+        price: 16000000,
+        stock: 10,
+        description: 'New Product',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
     ]
     return queryInterface.bulkInsert('Products', devProduct, {});
   },
