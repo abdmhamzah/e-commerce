@@ -4,8 +4,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Swal from 'sweetalert2'
 import router from '../router'
-// const url = 'https://aqueous-mesa-53283.herokuapp.com'
-const url = 'http://localhost:3000'
+const url = 'https://aqueous-mesa-53283.herokuapp.com'
+// const url = 'http://localhost:3000'
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -52,7 +52,13 @@ export default new Vuex.Store({
     actions: {
         signup(contex, newUser){
             if (newUser.password != newUser.confirm_password) {
-                console.log('Confirm Password must be the same with Password')
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    title: 'Confirm Password must be the same with Password',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             } else {
                 axios({
                     url: `${url}/users/signup`,
@@ -62,9 +68,23 @@ export default new Vuex.Store({
                 .then(() => {
                     console.log('berhasil signup');
                     router.push({ path: 'signin' })
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: 'Signed Up Successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 })
                 .catch(err => {
                     console.log(err)
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'error',
+                        title: 'Signed Up Failed, Input Your Data Carefully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 })
             }
         },
