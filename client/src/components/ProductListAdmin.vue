@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+
 export default {
     name: 'ProductListAdmin',
     computed: {
@@ -67,7 +69,24 @@ export default {
             this.$router.push({ name: 'EditProduct' })
         },
         deleteProduct(id){
-            this.$store.dispatch('deleteProduct', id)
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "this Product will be removed from your store",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                    )
+                    this.$store.dispatch('deleteProduct', id)
+                }
+            })
         }
     }
 }

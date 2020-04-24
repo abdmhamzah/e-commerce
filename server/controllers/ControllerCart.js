@@ -15,7 +15,7 @@ class ControllerCart {
     }
 
     static createCart(req, res, next){
-        const { qty } = req.body
+        const { qty } = req.body || 1
         const productId = Number(req.params.id)
         let curentProduct = null
         Cart.findAll({
@@ -32,13 +32,14 @@ class ControllerCart {
                 } 
             }
             if (!isListing) {
-                return Cart.create({
-                    ProductId: productId,
-                    UserId: req.UserId,
-                    qty: qty 
-                }, {
-                    include: [{ model: Product, as: 'Product' }, { model: User, as:'User' }], // BELUM SAMA BALIKANNYA DGN UPDATE
-                })
+                return Promise.all([
+                    Cart.create({
+                        ProductId: productId,
+                        UserId: req.UserId,
+                        qty: qty 
+                    }),
+                    Product.findOne({ where: { id: productId } })
+                ]) 
             } else {
                 return Cart.update({
                     qty: Number(curentProduct.qty) + 1,
@@ -52,7 +53,10 @@ class ControllerCart {
                 curentProduct.qty++
                 res.status(200).json({newCart: curentProduct})
             } else {
-                res.status(201).json({newCart})
+                let createdCart = newCart[0]
+                let productDetail = newCart[1]
+                createdCart.Product = productDetail
+                res.status(201).json({newCart: createdCart})
             }
         })
         .catch(next)
@@ -126,6 +130,18 @@ class ControllerCart {
             })
             .catch(next)
 
+    }
+
+    static deleteFromCart(req, res, next){
+        const { id } = Number(req.params.id)
+        console.log(id, 'ID masuk controller')
+        // Cart.destroy({ where: { id: id } })
+        //     .then(deleted => {
+        //         res.status(200).json({
+        //             message: 'Item in Cart has been deleted'
+        //         })
+        //     })
+        //     .catch(next)
     }
 }
 

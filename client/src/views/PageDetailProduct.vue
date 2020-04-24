@@ -14,7 +14,7 @@
                                 <h4>IDR {{ product.price }}</h4>
                                 <p>{{ product.description }}</p>
                                 <p>Stock: {{ product.stock }}</p>
-                                <button @click.prevent="addToCart(product)" type="button" class="btn btn-outline-secondary my-2 my-sm-0" style="margin-right: 10px;">
+                                <button @click.prevent="addToCart(product.id)" type="button" class="btn btn-outline-secondary my-2 my-sm-0" style="margin-right: 10px;">
                                     <i class="fa fa-cart-plus"></i> Add to My Cart
                                 </button>
                             </div>
@@ -44,8 +44,8 @@ export default {
         }
     },
     methods: {
-        addToCart(product){
-            this.$store.dispatch('addToCart', product)
+        addToCart(id){
+            this.$store.dispatch('addToCart', id)
         }
     }
 }

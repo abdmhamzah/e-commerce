@@ -2,9 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Swal from 'sweetalert2'
 import router from '../router'
-const url = 'https://aqueous-mesa-53283.herokuapp.com'
-// const url = 'http://localhost:3000'
+// const url = 'https://aqueous-mesa-53283.herokuapp.com'
+const url = 'http://localhost:3000'
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -32,8 +33,14 @@ export default new Vuex.Store({
         SET_LIST_PRODUCT(state, products){
             state.list_product = products
         },
+        SET_LIST_CART(state, carts){
+            state.cart_list = carts
+        },
         ADD_NEW_PRODUCT(state, newProduct){
             state.list_product.push(newProduct)
+        },
+        ADD_TO_CART(state, product){
+            state.cart_list.push(product)
         },
         TO_EDIT_PRODUCT(state, dataToEdit){
             state.toEdit = dataToEdit
@@ -41,9 +48,6 @@ export default new Vuex.Store({
         TO_DETAIL_PRODUCT(state, dataToDetail){
             state.toDetail = dataToDetail
         },
-        ADD_TO_CART(state, product){
-            state.cart_list.push(product)
-        }
     },
     actions: {
         signup(contex, newUser){
@@ -72,6 +76,7 @@ export default new Vuex.Store({
                 data: user
             })
             .then(userSignin => {
+                console.log(userSignin);
                 // console.log(userSignin.data.payload);
                 localStorage.setItem('token', userSignin.data.payload.token)
                 localStorage.setItem('name', userSignin.data.payload.name)
@@ -85,9 +90,23 @@ export default new Vuex.Store({
                 } else {
                     router.push({ name: 'PageAdmin' })
                 }
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Signed In Successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             })
             .catch(err => {
                 console.log(err)
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    title: 'Invalid Email / Password!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             })
         },
         signout({commit}){
@@ -96,6 +115,13 @@ export default new Vuex.Store({
             commit('SET_LOGIN', false)
             commit('SET_ROLE', null)
             router.push({ name: 'Home' })
+            Swal.fire({
+                position: 'top',
+                icon: 'success',
+                title: 'Signout Successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            })
         },
         getProducts({commit}){
             axios({
@@ -122,6 +148,13 @@ export default new Vuex.Store({
             .then(product => {
                 commit('ADD_NEW_PRODUCT', product.data.payload)
                 router.push('PageAdmin')
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Product added Successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             })
             .catch(err => {
                 console.log(err)
@@ -134,7 +167,7 @@ export default new Vuex.Store({
             
             axios({
                 url: `${url}/products/${id}`,
-                methods: 'PUT',
+                method: 'PUT',
                 data: editedData,
                 headers: {
                     token: token
@@ -148,8 +181,14 @@ export default new Vuex.Store({
                     }
                     updated_list.push(el)
                 })
-                console.log(updated_list);
-                
+                // console.log(updated_list);
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Product Edited Successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 commit('SET_LIST_PRODUCT', updated_list)
                 commit('TO_EDIT_PRODUCT', {})
                 router.push({ name: 'PageAdmin' })
@@ -175,19 +214,106 @@ export default new Vuex.Store({
                     }
                 })
                 commit('SET_LIST_PRODUCT', undeleted)
+
             })
         },
-        addToCart({commit}, product){
+        addToCart({commit}, id){
             let token = localStorage.getItem('token')
             if (token) {
-                commit('ADD_TO_CART', product)
-                router.push({ name: 'PageCart' })
+                axios({
+                    url: `${url}/carts/${id}`,
+                    method: 'POST',
+                    data: { qty: 1 },
+                    headers: {
+                        token: token
+                    }
+                })
+                    .then(toAddCart => {
+                        console.log(toAddCart.data.newCart)
+                        commit('ADD_TO_CART', toAddCart.data.newCart)
+                        // router.push({ name: 'PageCart' })
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'success',
+                            title: 'Your Cart has been added!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             } else {
-                console.log('Login dulu');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You must be Signin First!'
+                })
             }
         },
-        getCart({commit}){
-
+        getCarts({commit}){
+            let token = localStorage.getItem('token')
+            axios({
+                url: `${url}/carts`,
+                method: 'GET',
+                headers: {
+                    token: token
+                }
+            })
+                .then(carts => {
+                    console.log(carts.data);
+                    commit('SET_LIST_CART', carts.data)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        deleteFromCart({state, commit}, id){
+            console.log(id)
+            let token = localStorage.getItem('token')
+            axios({
+                url: `${url}/carts/${id}`,
+                methods: 'DELETE',
+                headers: {
+                    token: token
+                }
+            })
+                .then(deleted => {
+                    let undeleted = []
+                    state.cart_list.forEach(el => {
+                        if (el.id != id) {
+                            undeleted.push(el)
+                        }
+                    })
+                    commit('SET_LIST_CART', undeleted)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        toCheckout({state, commit}){
+            let token = localStorage.getItem('token')
+            axios({
+                url: `${url}/carts`,
+                method: 'DELETE',
+                headers: {
+                    token: token
+                }
+            })
+                .then(checkedOut => {
+                    commit('SET_LIST_CART', [])
+                    router.push({ name: 'Home' })
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: 'Thank You for your Purchase',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     },
     modules: {
